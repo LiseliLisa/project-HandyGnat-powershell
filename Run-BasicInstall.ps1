@@ -34,12 +34,14 @@ try {
     }
 }
 catch {
+    Write-Host "Somebody cut the wrong wire!" -ForegroundColor Red
     Write-Output ""
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
     exit 1
 }
 finally{
+    Write-Host "All apps have been installed!" -ForegroundColor Green
     Write-Output ""
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
