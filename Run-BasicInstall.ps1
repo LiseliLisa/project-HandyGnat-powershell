@@ -9,7 +9,7 @@ Param(
     [Parameter(Mandatory=$false)][Switch]$Firefox,
     [Parameter(Mandatory=$false)][Switch]$AdobeReader,
     [Parameter(Mandatory=$false)][Switch]$Flameshot,
-    [Parameter(Mandatory=$false)][ParameterType]$MSTeams
+    [Parameter(Mandatory=$false)][Switch]$MSTeams
 )
 try {
     if ($Chrome){
