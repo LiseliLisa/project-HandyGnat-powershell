@@ -34,5 +34,14 @@ try {
     }
 }
 catch {
+    Write-Output ""
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
     exit 1
+}
+finally{
+    Write-Output ""
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
+    exit 0
 }

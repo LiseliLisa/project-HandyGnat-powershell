@@ -46,5 +46,24 @@ try {
     }
 }
 catch {
+    Write-Output ""
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
     exit 1
+}
+finally{
+    if ([System.Environment]::Is64BitProcess -eq [System.Environment]::Is64BitOperatingSystem){
+        Stop-Process -ProcessName:Explorer -Force
+        Write-Output ""
+        Write-Output "Press any key to exit..."
+        $null = [System.Console]::ReadKey()
+        exit 0
+    }
+    else{
+        Write-Output "A reboot is required for all changes to take effect!"
+        Write-Output ""
+        Write-Output "Press any key to exit..."
+        $null = [System.Console]::ReadKey()
+        exit 0
+    }
 }
