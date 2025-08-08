@@ -11,7 +11,8 @@ Param(
     [Parameter(Mandatory=$false)][Switch]$Opera,
     [Parameter(Mandatory=$false)][Switch]$AdobeReader,
     [Parameter(Mandatory=$false)][Switch]$Flameshot,
-    [Parameter(Mandatory=$false)][Switch]$MSTeams
+    [Parameter(Mandatory=$false)][Switch]$MSTeams,
+    [Parameter(Mandatory=$false)][Switch]$PDF24Creator
 )
 try {
     if ($Chrome){
@@ -32,6 +33,9 @@ try {
     if ($MSTeams) {
         winget install -e -h --id Microsoft.Teams
     }
+    if ($PDF24Creator) {
+        winget install -e -h --id geeksoftwareGmbH.PDF24Creator
+    }     
 }
 catch {
     Write-Host "Somebody cut the wrong wire!" -ForegroundColor Red
