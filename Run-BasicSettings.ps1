@@ -9,7 +9,11 @@ Param(
     [Parameter(Mandatory=$false)][Switch]$TaskbarLeft,
     [Parameter(Mandatory=$false)][Switch]$TaskviewOff,
     [Parameter(Mandatory=$false)][Switch]$WidgetsOff,
-    [Parameter(Mandatory=$false)][Switch]$CopilotOff
+    [Parameter(Mandatory=$false)][Switch]$CopilotOff,
+    [Parameter(Mandatory=$false)][Switch]$DisableFaststart,
+    [Parameter(Mandatory=$false)][Switch]$HideSearchbar,
+    [Parameter(Mandatory=$false)][Switch]$ShowFileExtention,
+    [Parameter(Mandatory=$false)][Switch]$Darkmode
 )
 try {
     if ($TaskbarLeft){
@@ -25,7 +29,20 @@ try {
     if ($CopilotOff){
         Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowCopilotButton -Value 0
         Set-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
-        Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
+        Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
+    }
+    if ($DisableFaststart){
+        Set-ItemProperty "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -Value 0
+    }
+    if ($HideSearchbar){
+        Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name SearchboxTaskbarMode -Value 0
+    }
+    if ($ShowFileExtention){
+        Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name HideFileExt -Value 0
+    }
+    if ($Darkmode){
+        Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name AppsUseLightTheme -Value 0
+        Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name SystemUsesLightTheme -Value 0
     }
 }
 catch {

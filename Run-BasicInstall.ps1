@@ -8,6 +8,7 @@
 Param(
     [Parameter(Mandatory=$false)][Switch]$Chrome,
     [Parameter(Mandatory=$false)][Switch]$Firefox,
+    [Parameter(Mandatory=$false)][Switch]$Opera,
     [Parameter(Mandatory=$false)][Switch]$AdobeReader,
     [Parameter(Mandatory=$false)][Switch]$Flameshot,
     [Parameter(Mandatory=$false)][Switch]$MSTeams
@@ -18,6 +19,9 @@ try {
     }
     if ($Firefox) {
         winget install -e -h --id Mozilla.Firefox
+    }
+    if ($Opera) {
+        winget install -e -h --id Opera.Opera
     }
     if ($AdobeReader) {
         winget install -e -h --id Adobe.Acrobat.Reader.64-bit
