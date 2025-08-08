@@ -3,6 +3,7 @@
 # Set-ExecutionPolicy Unrestricted -Scope Process -Force
 #
 
+#Requires -RunAsAdministrator
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$false)][Switch]$Default,
