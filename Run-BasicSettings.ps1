@@ -26,7 +26,7 @@ try {
         }
     }
     if ($TaskviewOff){
-        if ((Get-Item"HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowTaskViewButton"){
+        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowTaskViewButton"){
             Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowTaskViewButton -Value 0
             Write-Host "Taskview turned off" -ForegroundColor Green
         }
@@ -53,14 +53,14 @@ try {
         #>
     }
     if ($CopilotOff){
+        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowCopilotButton") {
+            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowCopilotButton -Value 0
+            Write-Host "Co-Pilot Button disabled" -ForegroundColor Green
+        }
+        else {
+            Write-Host "Co-Pilot Button couldn't be disabled" -ForegroundColor Red
+        }
         if ((Test-Path "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot") -and (Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot")) {
-            if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowCopilotButton") {
-                Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowCopilotButton -Value 0
-                Write-Host "Co-Pilot Button disabled" -ForegroundColor Green
-            }
-            else {
-                Write-Host "Co-Pilot Button couldn't be disabled" -ForegroundColor Red
-            }
             if ((Get-Item "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot").Property -contains "TurnOffWindowsCopilot") {
                 Set-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
                 Write-Host "Co-Pilot turned off for current user" -ForegroundColor Green
@@ -77,7 +77,7 @@ try {
             }
         }
         else {
-            Write-Host "Co-Pilot ist not installed on this computer" -ForegroundColor Red
+            Write-Host "Required registry keys couln't be found" -ForegroundColor Red
         }
     }
     if ($DisableFaststart){
