@@ -53,7 +53,7 @@ try {
         #>
     }
     if ($CopilotOff){
-        if (Test-Path "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot" && Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot") {
+        if ((Test-Path "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot") -and (Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot")) {
             if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowCopilotButton") {
                 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowCopilotButton -Value 0
                 Write-Host "Co-Pilot Button disabled" -ForegroundColor Green
