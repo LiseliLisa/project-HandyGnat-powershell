@@ -125,6 +125,9 @@ catch {
     exit 1
 }
 finally{
+    net start w32time
+    w32tm -resync
+
     if ([System.Environment]::Is64BitProcess -eq [System.Environment]::Is64BitOperatingSystem){
         Stop-Process -ProcessName:Explorer -Force
         Write-Host "All settings have been applied!" -ForegroundColor Green
