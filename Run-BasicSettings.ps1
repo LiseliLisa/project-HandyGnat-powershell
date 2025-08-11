@@ -51,26 +51,31 @@ try {
         }
     }
     if ($CopilotOff){
-        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowCopilotButton"){
-            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowCopilotButton -Value 0
-            Write-Host "Co-Pilot Button disabled" -ForegroundColor Green
+        if (Test-Path "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot" && Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot") {
+            if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowCopilotButton") {
+                Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowCopilotButton -Value 0
+                Write-Host "Co-Pilot Button disabled" -ForegroundColor Green
+            }
+            else {
+                Write-Host "Co-Pilot Button couldn't be disabled" -ForegroundColor Red
+            }
+            if ((Get-Item "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot").Property -contains "TurnOffWindowsCopilot") {
+                Set-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
+                Write-Host "Co-Pilot turned off for current user" -ForegroundColor Green
+            }
+            else {
+                Write-Host "Co-Pilot couldn't be turned off for current user" -ForegroundColor Red
+            }
+            if ((Get-Item "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot").Property -contains "TurnOffWindowsCopilot") {
+                Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
+                Write-Host "Co-Pilot turned off for local machine" -ForegroundColor Green
+            }
+            else {
+                Write-Host "Co-Pilot couldn't be turned off for local machine" -ForegroundColor Red
+            }
         }
-        else{
-            Write-Host "Co-Pilot Button couldn't be disabled" -ForegroundColor Red
-        }
-        if ((Get-Item "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot").Property -contains "TurnOffWindowsCopilot") {
-            Set-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
-            Write-Host "Co-Pilot turned off for current user" -ForegroundColor Green
-        }
-        else{
-            Write-Host "Co-Pilot couldn't be turned off for current user" -ForegroundColor Red
-        }
-        if ((Get-Item "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot").Property -contains "TurnOffWindowsCopilot") {
-            Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
-            Write-Host "Co-Pilot turned off for local machine" -ForegroundColor Green
-        }
-        else{
-            Write-Host "Co-Pilot couldn't be turned off for local machine" -ForegroundColor Red
+        else {
+            Write-Host "Co-Pilot ist not installed on this computer" -ForegroundColor Red
         }
     }
     if ($DisableFaststart){
