@@ -42,6 +42,7 @@ try {
         else{
             Write-Host "Widgets couldn't be disabled" -ForegroundColor Red
         }
+        <#
         if ((Get-Item "HKLM:\Software\Policies\Microsoft\Dsh").Property -contains "value"){
             Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Dsh" -Name AllowNewsAndInterests -Value 0
             Write-Host "Widgets disabled" -ForegroundColor Green
@@ -49,6 +50,7 @@ try {
         else{
             Write-Host "Policy not updated" -ForegroundColor Red
         }
+        #>
     }
     if ($CopilotOff){
         if (Test-Path "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot" && Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot") {
