@@ -62,7 +62,7 @@ try {
                 Write-Host "Policy for Widgets updated" -ForegroundColor Green
             }
             catch {
-                Write-Host "Policy for Widgets not updated" -ForegroundColor Red
+                Write-Host "Policy for Widgets coudln't be updated" -ForegroundColor Red
             }
         }
     }
@@ -74,14 +74,34 @@ try {
         else {
             Write-Host "Co-Pilot Button couldn't be disabled" -ForegroundColor Red
         }
-        if ((Test-Path "$HKU\Software\Policies\Microsoft\Windows\WindowsCopilot") -and (Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot")) {
+        if (Test-Path "$HKU\Software\Policies\Microsoft\Windows\WindowsCopilot") {
             Set-ItemProperty "$HKU\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
             Write-Host "Co-Pilot turned off for current user" -ForegroundColor Green
+            
+        }
+        else {
+            try {
+                New-Item "$HKU\Software\Policies\Microsoft\Windows\WindowsCopilot"
+                Set-ItemProperty "$HKU\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
+                Write-Host "Co-Pilot turned off for current user" -ForegroundColor Green
+            }
+            catch {
+                Write-Host "Co-Pilot for current user couldn't be turned off" -ForegroundColor Red
+            }
+        }
+        if (Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot") {
             Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
             Write-Host "Co-Pilot turned off for local machine" -ForegroundColor Green
         }
         else {
-            Write-Host "Co-Pilot couldn't be turned off" -ForegroundColor Red
+            try {
+                New-Item "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot"
+                Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
+                Write-Host "Co-Pilot turned off for local machine" -ForegroundColor Green
+            }
+            catch {
+                Write-Host "Co-Pilot for local machine couldn't be turned off" -ForegroundColor Red
+            }  
         }
     }
     if ($DisableFaststart){
