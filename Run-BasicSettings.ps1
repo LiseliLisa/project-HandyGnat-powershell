@@ -6,6 +6,7 @@
 #Requires -RunAsAdministrator
 [CmdletBinding()]
 Param(
+    [Parameter(Mandatory=$false)][string]$Hostname,
     [Parameter(Mandatory=$false)][Switch]$TaskbarLeft,
     [Parameter(Mandatory=$false)][Switch]$TaskviewOff,
     [Parameter(Mandatory=$false)][Switch]$WidgetsOff,
@@ -20,6 +21,9 @@ try {
     $SID = (New-Object System.Security.Principal.NTAccount($LoggedOnUser)).Translate([System.Security.Principal.SecurityIdentifier]).Value
     $HKU = "Registry::HKU\$SID"
 
+    if ($Hostname){
+        Rename-Computer $Hostname
+    }
 
     if ($TaskbarLeft){
         if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced") {
