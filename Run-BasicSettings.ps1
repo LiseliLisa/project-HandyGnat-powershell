@@ -51,15 +51,20 @@ try {
         else{
             Write-Host "Widgets couldn't be disabled" -ForegroundColor Red
         }
-        <#
-        if ((Get-Item "HKLM:\Software\Policies\Microsoft\Dsh").Property -contains "value"){
+        if (Test-Path "HKLM:\Software\Policies\Microsoft\Dsh"){
             Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Dsh" -Name AllowNewsAndInterests -Value 0
-            Write-Host "Widgets disabled" -ForegroundColor Green
+            Write-Host "Policy for Widgets updated" -ForegroundColor Green
         }
         else{
-            Write-Host "Policy not updated" -ForegroundColor Red
+            try {
+                New-Item "HKLM:\Software\Policies\Microsoft\Dsh"
+                Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Dsh" -Name AllowNewsAndInterests -Value 0
+                Write-Host "Policy for Widgets updated" -ForegroundColor Green
+            }
+            catch {
+                Write-Host "Policy for Widgets not updated" -ForegroundColor Red
+            }
         }
-        #>
     }
     if ($CopilotOff){
         if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced") {
