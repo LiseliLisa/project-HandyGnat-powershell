@@ -16,8 +16,18 @@ try {
     if ($Sysprep){
         & ([scriptblock]::Create((Invoke-RestMethod "https://debloat.raphi.re/"))) -Sysprep -RemoveApps -RemoveGamingApps
     }
-    exit 0
 }
 catch {
+    Write-Host "Somebody cut the wrong wire!" -ForegroundColor Red
+    Write-Output ""
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
     exit 1
+}
+finally{
+    Write-Host "Debloat was successful!" -ForegroundColor Green
+    Write-Output ""
+    Write-Output "Press any key to exit..."
+    $null = [System.Console]::ReadKey()
+    exit 0
 }
