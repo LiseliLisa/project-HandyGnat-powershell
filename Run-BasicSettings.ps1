@@ -16,9 +16,14 @@ Param(
     [Parameter(Mandatory=$false)][Switch]$Darkmode
 )
 try {
+    $LoggedOnUser = (Get-CimInstance Win32_ComputerSystem).UserName
+    $SID = (New-Object System.Security.Principal.NTAccount($LoggedOnUser)).Translate([System.Security.Principal.SecurityIdentifier]).Value
+    $HKU = "Registry::HKU\$SID"
+
+
     if ($TaskbarLeft){
-        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "TaskbarAl") {
-            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name TaskbarAl -Value 0
+        if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced") {
+            Set-ItemProperty "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name TaskbarAl -Value 0
             Write-Host "Taskbar aligned left" -ForegroundColor Green
         }
         else{
@@ -26,8 +31,8 @@ try {
         }
     }
     if ($TaskviewOff){
-        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowTaskViewButton"){
-            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowTaskViewButton -Value 0
+        if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"){
+            Set-ItemProperty "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowTaskViewButton -Value 0
             Write-Host "Taskview turned off" -ForegroundColor Green
         }
         else{
@@ -35,7 +40,7 @@ try {
         }
     }
     if ($WidgetsOff){
-        if ((Get-Item "HKLM:\Software\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests").Property -contains "value"){
+        if (Test-Path "HKLM:\Software\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests"){
             Set-ItemProperty "HKLM:\Software\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests" -Name value -Value 0
             Write-Host "Widgets disabled" -ForegroundColor Green
         }
@@ -53,35 +58,25 @@ try {
         #>
     }
     if ($CopilotOff){
-        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "ShowCopilotButton") {
-            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowCopilotButton -Value 0
+        if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced") {
+            Set-ItemProperty "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ShowCopilotButton -Value 0
             Write-Host "Co-Pilot Button disabled" -ForegroundColor Green
         }
         else {
             Write-Host "Co-Pilot Button couldn't be disabled" -ForegroundColor Red
         }
-        if ((Test-Path "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot") -and (Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot")) {
-            if ((Get-Item "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot").Property -contains "TurnOffWindowsCopilot") {
-                Set-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
-                Write-Host "Co-Pilot turned off for current user" -ForegroundColor Green
-            }
-            else {
-                Write-Host "Co-Pilot couldn't be turned off for current user" -ForegroundColor Red
-            }
-            if ((Get-Item "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot").Property -contains "TurnOffWindowsCopilot") {
-                Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
-                Write-Host "Co-Pilot turned off for local machine" -ForegroundColor Green
-            }
-            else {
-                Write-Host "Co-Pilot couldn't be turned off for local machine" -ForegroundColor Red
-            }
+        if ((Test-Path "$HKU\Software\Policies\Microsoft\Windows\WindowsCopilot") -and (Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot")) {
+            Set-ItemProperty "$HKU\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
+            Write-Host "Co-Pilot turned off for current user" -ForegroundColor Green
+            Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\WindowsCopilot" -Name TurnOffWindowsCopilot -Value 1
+            Write-Host "Co-Pilot turned off for local machine" -ForegroundColor Green
         }
         else {
-            Write-Host "Required registry keys couln't be found" -ForegroundColor Red
+            Write-Host "Co-Pilot couldn't be turned off" -ForegroundColor Red
         }
     }
     if ($DisableFaststart){
-        if ((Get-Item "HKLM:\System\CurrentControlSet\Control\Session Manager\Power").Property -contains "HiberbootEnabled") {
+        if (Test-Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power") {
             Set-ItemProperty "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -Value 0
             Write-Host "Faststart disabled" -ForegroundColor Green
         }
@@ -90,8 +85,8 @@ try {
         }
     }
     if ($HideSearchbar){
-        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search").Property -contains "SearchboxTaskbarMode") {
-            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name SearchboxTaskbarMode -Value 0
+        if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Search") {
+            Set-ItemProperty "$HKU\Software\Microsoft\Windows\CurrentVersion\Search" -Name SearchboxTaskbarMode -Value 0
             Write-Host "Searchbar hidden" -ForegroundColor Green
         }
         else{
@@ -99,8 +94,8 @@ try {
         }
     }
     if ($ShowFileExtention){
-        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced").Property -contains "HideFileExt") {
-            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name HideFileExt -Value 0
+        if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced") {
+            Set-ItemProperty "$HKU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name HideFileExt -Value 0
             Write-Host "File extentions enabled" -ForegroundColor Green
         }
         else{
@@ -108,15 +103,15 @@ try {
         }
     }
     if ($Darkmode){
-        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize").Property -contains "AppsUseLightTheme") {
-            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name AppsUseLightTheme -Value 0
+        if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize") {
+            Set-ItemProperty "$HKU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name AppsUseLightTheme -Value 0
             Write-Host "Darkmode enabled for apps" -ForegroundColor Green
         }
         else{
             Write-Host "Darkmode couldn't be enabled for apps" -ForegroundColor Red
         }
-        if ((Get-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize").Property -contains "SystemUsesLightTheme") {
-            Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name SystemUsesLightTheme -Value 0
+        if (Test-Path "$HKU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize") {
+            Set-ItemProperty "$HKU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name SystemUsesLightTheme -Value 0
             Write-Host "Darkmode enabled for system" -ForegroundColor Green
         }
         else{
