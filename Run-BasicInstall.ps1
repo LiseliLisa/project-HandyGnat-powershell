@@ -16,26 +16,29 @@ Param(
 )
 try {
     if ($Chrome){
-        winget install -e -h --id Google.Chrome
+        winget install -e -h --source winget --id Google.Chrome
     }
     if ($Firefox) {
-        winget install -e -h --id Mozilla.Firefox
+        winget install -e -h --source winget --id Mozilla.Firefox
     }
     if ($Opera) {
-        winget install -e -h --id Opera.Opera
+        winget install -e -h --source winget --id Opera.Opera
     }
     if ($AdobeReader) {
-        winget install -e -h --id Adobe.Acrobat.Reader.64-bit
+        winget install -e -h --source winget --id Adobe.Acrobat.Reader.64-bit
     }
     if ($Flameshot) {
-        winget install -e -h --id Flameshot.Flameshot
+        winget install -e -h --source winget --id Flameshot.Flameshot
     }
     if ($MSTeams) {
-        winget install -e -h --id Microsoft.Teams
+        winget install -e -h --source winget --id Microsoft.Teams
     }
     if ($PDF24Creator) {
-        winget install -e -h --id geeksoftwareGmbH.PDF24Creator
+        winget install -e -h --source winget --id geeksoftwareGmbH.PDF24Creator
     }     
+
+    Write-Host "All apps have been installed!" -ForegroundColor Green
+    Write-Output ""
 }
 catch {
     Write-Host "Somebody cut the wrong wire!" -ForegroundColor Red
@@ -45,8 +48,6 @@ catch {
     exit 1
 }
 finally{
-    Write-Host "All apps have been installed!" -ForegroundColor Green
-    Write-Output ""
     Write-Output "Press any key to exit..."
     $null = [System.Console]::ReadKey()
     exit 0
